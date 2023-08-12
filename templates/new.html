@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Uusi huutokauppa</h2>
+<br>
+<form action="/new" method="POST" enctype="multipart/form-data">
+    TITLE: <br>
+    <textarea name="title" rows="1" cols="20"></textarea>
+    <p>
+    KUVAUS: <br>
+    <textarea name="content" rows="3" cols="50"></textarea>
+    <p>
+    LUOKKA: <br>
+    <input type="radio" name="_class" value="Jalkapallo"> Jalkapallo
+    <input type="radio" name="_class" value="Jääkiekko"> Jääkiekko
+    <input type="radio" name="_class" value="Koripallo"> Koripallo
+    <input type="radio" name="_class" value="Muu"> Muu
+    <p>
+    KUNTO: <br>
+    <input type="radio" name="condition" value="Hyvä"> Hyvä
+    <input type="radio" name="condition" value="Kohtalainen"> Kohtalainen
+    <input type="radio" name="condition" value="Huono"> Huono
+    <p>
+    KAUPUNKI: <br>
+    <input type="radio" name="city" value="Helsinki"> Helsinki
+    <input type="radio" name="city" value="Turku"> Turku
+    <input type="radio" name="city" value="Tampere"> Tampere
+    <input type="radio" name="city" value="Jyväskylä"> Jyväskylä
+    <input type="radio" name="city" value="Oulu"> Oulu
+    <input type="radio" name="city" value="Muu"> Muu
+    <p>
+    LISÄÄ KUVA KORTIN ETUPUOLESTA  <br>
+    <input type="file" name="file1">
+    <p>
+    LISÄÄ KUVA KORTIN TAKAPUOLESTA <br>
+    <input type="file"  name="file2">
+    <p>
+    LÄHTÖHINTA <br>
+    <input type="number" id="bid_start" name="bid_start" min="1" max="100">
+    <p>
+    PÄÄTTYMISPÄIVÄ <br>
+    <input type="date" name="ending_time" placeholder="dd-mm-yyyy" value="" min= {{ tomorrow }} max= {{ oneweek }}>
+    <p>
+    <input type="submit" value="Lähetä">
+
+</form>
+<br>    
+{% endblock %}

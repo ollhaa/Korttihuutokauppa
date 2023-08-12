@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>ANNA PALAUTETTA</h2>
+<br>
+<form action="/feedback" method="POST">
+    Palaute: <br>
+    <textarea name="feedback" rows="3" cols="40"></textarea>
+    <br>
+    <input type="submit" value="Lähetä">
+    </form>
+<br>    
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Search</h2>
+
+<form action="/results" method="POST">
+    LUOKKA: <br>
+    <input type="radio" name="_class" value="Jalkapallo" checked="checked"> Jalkapallo
+    <input type="radio" name="_class" value="Jääkiekko"> Jääkiekko
+    <input type="radio" name="_class" value="Koripallo"> Koripallo
+    <input type="radio" name="_class" value="Muu"> Muu
+    <input type="radio" name="_class" value="Kaikki"> Kaikki
+
+    <p>
+    KUNTO: <br>
+    <input type="radio" name="condition" value="Hyvä" checked="checked"> Hyvä
+    <input type="radio" name="condition" value="Kohtalainen"> Kohtalainen
+    <input type="radio" name="condition" value="Huono"> Huono
+    <input type="radio" name="condition" value="Kaikki"> Kaikki
+    <p>
+    KAUPUNKI: <br>
+    <input type="radio" name="city" value="Helsinki" checked="checked"> Helsinki
+    <input type="radio" name="city" value="Turku"> Turku
+    <input type="radio" name="city" value="Tampere"> Tampere
+    <input type="radio" name="city" value="Jyväskylä"> Jyväskylä
+    <input type="radio" name="city" value="Oulu"> Oulu
+    <input type="radio" name="city" value="Muu"> Muu
+    <input type="radio" name="city" value="Kaikki"> Kaikki
+
+    <p>
+
+    <input type="submit" value="Hae">
+
+
+{% endblock %}

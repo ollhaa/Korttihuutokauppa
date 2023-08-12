@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Auction</h2>
+<p>
+YLEISTÄ:
+<br>
+Aihe: {{ auction.title }} <br>
+Kuvaus: {{ auction.content }} <br>
+Luokka: {{ auction._class }} <br>
+Kaupunki: {{ auction.city }} <br>
+Kunto: {{ auction.condition }} <br>
+Aloitettu: {{ auction.created_at }} <br>
+Aloitushinta: {{ auction.bid_start }} <br>
+Päättyy: {{ auction.ending_time }} <br>
+<p>
+KUVAT: <br>
+
+<a id="ab" href="/show_front/{{ id }}">Etupuoli(linkki)</a>
+<br>
+<a id="ab" href="/show_back/{{ id }}">Takapuoli(linkki)</a>
+<p>
+VIIMEISIN:
+<br>
+Korkein tarjous: {{ max_bid.bid }} <br>
+Tekijä: {{ max_bid.username }} <br>
+Milloin: {{ max_bid.bid_time }} <br>
+<p>
+<form action="/bid" method="POST">
+    Korotus (1-10):  <br>
+    <input type="number" id="bid" name="bid" min="1" max="10">
+    <p>
+<input type="submit" value="Tee tarjous">
+<input type="hidden" name="auction_id" value="{{ id }}">
+<br>
+</form>
+<br>
+<br>
+<a href="/search">TAKAISIN HAKUUN!</a> <br>
+<br>
+
+{% endblock %}

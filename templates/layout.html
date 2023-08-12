@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fi">
+ 
+  <head>
+    <link rel="stylesheet" href="/static/main.css" />
+
+    <title>KORTTIHUUTOKAUPPA</title>
+
+  </head>
+
+  <body>
+    <div class="header">
+      <h1>KORTTIHUUTOKAUPPA</h1>
+
+    </div>
+    
+      <nav>
+      {% block nav %}
+        <ul>
+          <li><a href="/">HOME</a></li>
+          <li><a href="/new">NEW</a></li>
+          <li><a href="/search">SEARCH</a></li>
+          <li><a href="/profile">PROFILE</a></li>
+          <li><a href="/feedback">FEEDBACK</a></li>
+          <li><a href="/logout">LOGOUT</a> </li>
+        </ul>
+      {% endblock %}
+      </nav>
+      
+    <div class="basic">
+        {% block content %}{% endblock %}
+    </div>
+      
+
+  </body>
+</html>

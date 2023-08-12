@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block nav %}
+        <ul>
+            <li><a href="/login">LOGIN</a></li>
+            <li><a href="/about">ABOUT</a></li>
+
+        </ul>
+{% endblock %}
+
+{% block content %}
+<h2>REKISTERÖIDY</h2>
+<br>
+    <form action="/register" method="POST">
+        <p>Anna haluamasi tunnus (4-10 merkkiä):<br>
+        <input type="text" name="username"></p>
+        <p>Sähköpostiosoitteesi:<br>
+        <input type ="email" name="mail"></p>
+        <p>Anna uusi salasanasi (4-10 merkkiä):<br>
+        <input type="password" name="password"></p>
+        <p>Salasanasi uudestaan:<br>
+        <input type="password" name="password2"></p>
+        <input type="submit" value="Lähetä">
+        <input type="reset" value="Tyhjennä">
+    </form>
+<br>    
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Profile</h2>
+
+Hei {{ facts.username }} !  <P>
+
+Olet luonnut profiilisi {{ facts.created_at.strftime("%Y-%m-%d %H:%M:%S") }}
+<P>
+    Aloitetut huutokaupat: {{ num_of_messages }} <br>
+    Tehdyt tarjoukset: {{ num_of_bids }} <br>
+    Voitetut huutokaupat: <br>
+</P>
+
+
+<h2> Salasanan vaihtaminen</h2>
+<br>
+    <form action="/profile" method="POST">
+        <p>Anna nykyinen salasanasi:<br>
+        <input type="password" name="password"></p>
+        <p>Anna uusi salasanasi (4-10 merkkiä):<br>
+        <input type="password" name="new_password"></p>
+        <p>Uusi salasanasi uudestaan:<br>
+        <input type="password" name="new_password2"></p>
+        <input type="submit" value="Lähetä">
+    </form>
+<br>    
+
+{% endblock %}

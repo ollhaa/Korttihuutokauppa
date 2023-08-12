@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<br>
+<table>
+    <tr>
+        <th>Aihe</th>
+        <th>Luokka</th>
+        <th>Luotu</th>
+        <th>Päättyy</th>
+        <th>Aloitushinta</th>
+        <th>Linkki</th>
+    </tr>
+{% for auction in auctions %}
+    <tr>
+        <td> {{ auction.title }} </td>
+        <td> {{ auction._class }} </td>
+        <td> {{ auction.created_at.strftime("%Y-%m-%d") }} </td>
+        <td> {{ auction.ending_time.strftime("%Y-%m-%d %H:%M:%S") }} </td>
+        <td> {{ auction.bid_start }} </td>
+        <td>  <a id="ab" href="/auction/{{ auction.id }}">Tästä</a> </td>
+    </tr>
+
+{% endfor %}
+
+</table>
+<br>
+{% endblock %}

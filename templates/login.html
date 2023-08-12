@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block nav %}
+        <ul>
+          <li><a href="/register">REGISTER</a></li>
+          <li><a href="/about">ABOUT</a></li>
+
+        </ul>
+{% endblock %}
+
+{% block content %}
+<h2>KIRJAUDU</h2>
+<br>
+    <form action="/login" method="POST">
+        <p>Tunnus:<br>
+        <input type="text" name="username"></p>
+        <p>Salasana:<br>
+        <input type="password" name="password"></p>
+        <input type="submit" value="Kirjaudu">
+    </form>
+<br>    
+{% endblock %}

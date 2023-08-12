@@ -1,0 +1,92 @@
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    background-image: url("huutokauppa_tausta.jpg");
+}
+
+
+
+
+.header {
+    margin: auto;
+    max-width: 100em;
+    max-height: 10em;
+    text-align: center;
+    padding: 0px 0px 0px 0px;
+    background-color: rgb(70, 122, 156);
+    border-radius: 20px 20px 0px 0px;
+  
+    border: solid;
+    border-color: rgb(23, 25, 26);
+  }
+
+  .basic {
+    margin: auto;
+    max-width: 100em;
+    max-height: 100em;
+    background-color: rgb(70, 122, 156);
+    border: solid;
+    border-color: rgb(23, 25, 26);
+  }
+
+  .container {
+    margin: auto;
+    max-width: 100em;
+    max-height: 10em;
+    border-radius: 0px 0px 0px 0px;
+    background-color: rgb(14, 170, 175);
+
+    border: solid;
+    border-color: rgb(23, 25, 26);
+  }
+
+  nav {
+    max-width: 100em;
+    margin: auto;
+    background-color: rgb(70, 122, 156);
+
+  }
+
+  ul {
+    list-style-type: none;
+    overflow: hidden;
+    margin: 0em;
+    padding: 10px;
+  }
+
+  li {
+    display: inline-block;
+    padding: 0em;
+  }
+
+  #ab {
+    text-align: center;
+    text-decoration: none;
+    padding: 0px;
+    border: none;
+    color: rgb(170, 23, 23);
+    background-color: rgb(70, 122, 156);
+  }
+
+  a {
+    min-width: 8em;
+    text-align: center;
+    text-decoration: none;
+    padding: 20px;
+    border: none;
+    color: black;
+    background-color: rgb(70, 122, 156);
+  }
+
+  a:hover {
+    background-color:whitesmoke;
+    color: rgb(70, 122, 156);
+  }
+
+  a:visited {
+    color: black;
+  }
+  
+ 
+
+
+
