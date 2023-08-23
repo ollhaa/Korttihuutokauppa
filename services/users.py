@@ -1,9 +1,5 @@
-#from os import getenv
-#from flask import Flask, render_template, redirect, request, session, make_response
-#from flask_sqlalchemy import SQLAlchemy
 from flask import session
 from sqlalchemy.sql import text
-#from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 
@@ -17,7 +13,9 @@ def login(username, password):
     if not user:
         return False
     hash_value = user.password
-    if check_password_hash(hash_value, password):
+    if not check_password_hash(hash_value, password):
+        return False
+    else:
         session["username"] = user.username
         session["user_id"] = user.id
     return True
@@ -31,9 +29,14 @@ def logout():
 
 def register(username, password, mail):
     hash_value = generate_password_hash(password)
-    sql = "INSERT INTO users (username, password,mail, created_at, last_modified, admin) VALUES (:username, :password, :mail, NOW(), NOW(), False)"
-    db.session.execute(text(sql), {"username":username, "password":hash_value, "mail":mail})
-    db.session.commit()
+    try:
+        sql = "INSERT INTO users (username, password,mail, created_at, last_modified, admin) VALUES (:username, :password, :mail, NOW(), NOW(), False)"
+        db.session.execute(text(sql), {"username":username, "password":hash_value, "mail":mail})
+        db.session.commit()
+    except:
+        return False
+    
+    return True
 
 def get_profile_facts():
     user_id = session.get("user_id")
