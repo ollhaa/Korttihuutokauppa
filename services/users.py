@@ -23,6 +23,20 @@ def login(username, password):
 def is_logged():
     return session.get("username")
 
+def is_admin():
+    user_id = session.get("user_id")
+    print("user_id", user_id)
+    try:
+        sql = "SELECT id, admin FROM users WHERE id=:user_id"
+        result = db.session.execute(text(sql), {"user_id":user_id})
+        admin = result.fetchone()[1]
+        print("users", admin)
+    except:
+        print("except")
+        return False
+
+    return admin 
+
 def logout():
     del session["username"]
     del session["user_id"]

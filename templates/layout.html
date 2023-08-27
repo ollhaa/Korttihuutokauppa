@@ -17,12 +17,23 @@
       <nav>
       {% block nav %}
         <ul>
+          <li> <b> LOGGED AS: {{ username }} </b> </li>
           <li><a href="/">HOME</a></li>
+          
           <li><a href="/new">NEW</a></li>
           <li><a href="/search">SEARCH</a></li>
           <li><a href="/profile">PROFILE</a></li>
+          <li><a href="/messages">MESSAGES</a></li>
           <li><a href="/feedback">FEEDBACK</a></li>
+
+          {% if admin %}
+          <li><a href="/admin">ADMIN</a></li>
+          {% endif %}
+
           <li><a href="/logout">LOGOUT</a> </li>
+          
+
+          
         </ul>
       {% endblock %}
       </nav>

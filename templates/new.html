@@ -1,14 +1,20 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
+
+{% for message in get_flashed_messages() %}
+    {{ message }}
+{% endfor %}
+
 <h2>Uusi huutokauppa</h2>
 <br>
 <form action="/new" method="POST" enctype="multipart/form-data">
     TITLE: <br>
-    <textarea name="title" rows="1" cols="20"></textarea>
+    <textarea placeholder="Min. 5 merkkiä" name="title" rows="1" cols="20" required ></textarea>
     <p>
     KUVAUS: <br>
-    <textarea name="content" rows="3" cols="50"></textarea>
+    <textarea placeholder="Kuvaus vähintään kymmenellä merkillä (ei sisällä välilyöntejä)" name="content" rows="3" cols="50" required ></textarea>
     <p>
     LUOKKA: <br>
     <input type="radio" name="_class" value="Jalkapallo"checked="checked">  Jalkapallo 
@@ -30,16 +36,16 @@
     <input type="radio" name="city" value="Muu"> Muu
     <p>
     LISÄÄ KUVA KORTIN ETUPUOLESTA  <br>
-    <input type="file" name="file1">
+    <input type="file" name="file1" required/>
     <p>
     LISÄÄ KUVA KORTIN TAKAPUOLESTA <br>
-    <input type="file"  name="file2">
+    <input type="file"  name="file2" required/>
     <p>
-    LÄHTÖHINTA <br>
-    <input type="number" id="bid_start" name="bid_start" min="1" max="100">
+    LÄHTÖHINTA (1-100,€) <br>
+    <input type="number" id="bid_start" name="bid_start" min="1" max="100" required/>
     <p>
     PÄÄTTYMISPÄIVÄ <br>
-    <input type="date" name="ending_time" placeholder="dd-mm-yyyy" value="" min= {{ tomorrow }} max= {{ oneweek }}>
+    <input type="date" name="ending_time" placeholder="dd-mm-yyyy" value="" min= {{ tomorrow }} max= {{ oneweek }} required />
     <p>
     <input type="submit" value="Lähetä">
 

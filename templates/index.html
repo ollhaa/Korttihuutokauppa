@@ -2,7 +2,9 @@
 
 {% block content %}
 
-
+{% for message in get_flashed_messages() %}
+    {{ message }}
+{% endfor %}
 
 <h2>Etusivu</h2>
 Tervetuloa sovellukseen!

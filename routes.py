@@ -7,7 +7,11 @@ from datetime import datetime, timedelta
 @app.route("/")
 def index():
     if users.is_logged():
-        return render_template("index.html")
+        user = users.is_logged()
+        username = user[0:3]+"..."
+        admin = users.is_admin()
+        print("route",admin)
+        return render_template("index.html", username= username, admin=admin)
     else:
         return render_template("/login.html")
 
@@ -43,10 +47,10 @@ def register():
         password2 = request.form["password2"]
         mail = request.form["mail"]
         # TODO: tarkista sanat
-        if len(username) <4 or len(username) >12:
+        if len(username) <4 or len(username) >10:
             flash("Tarkista nimen pituus")
             return render_template("/register.html")
-        if len(password) <4 or len(password) >12:
+        if len(password) <4 or len(password) >10:
             flash("Tarkista salasanan pituus")
         if password != password2:
             flash("Salasanat eivät ole samat")
@@ -66,7 +70,10 @@ def about():
 @app.route("/feedback", methods=["GET", "POST"])
 def send_feedback():
     if request.method == "GET":
-        return render_template("feedback.html")
+        user = users.is_logged()
+        username = user[0:3]+"..."
+        admin = users.is_admin()
+        return render_template("feedback.html", username= username, admin=admin)
     if request.method == "POST":
         feedback = request.form["feedback"]
         users.feedback(feedback)
@@ -74,10 +81,14 @@ def send_feedback():
 
 @app.route("/new", methods=["GET", "POST"])
 def new():
+    admin = users.is_admin()
     if request.method == "GET":
+        user = users.is_logged()
+        username = user[0:3]+"..."
+        admin = users.is_admin()
         tomorrow = datetime.today() + timedelta(1)
         oneweek = datetime.today()+ timedelta(7)
-        return render_template("new.html", tomorrow=tomorrow, oneweek=oneweek)
+        return render_template("new.html", tomorrow=tomorrow, oneweek=oneweek, username= username, admin=admin)
     if request.method == "POST":
         title = request.form["title"]
         content = request.form["content"]
@@ -93,17 +104,27 @@ def new():
         bid_start = request.form["bid_start"]
         ending_time = request.form["ending_time"]
 
-        auctions.new(title, content, _class, condition, city,data1, data2,name1, name2, bid_start, ending_time)
-        return redirect("/")
+        if auctions.new(title, content, _class, condition, city,data1, data2,name1, name2, bid_start, ending_time):
+            flash("Tallennus onnistui!")
+            return redirect("/")
+            
+        flash("Tallennus ei onnistunut")
+        return render_template("/new.html")
+            
+
 
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
+    admin = users.is_admin()
     if request.method == "GET":
+        user = users.is_logged()
+        username = user[0:3]+"..."
+        admin = users.is_admin()
         facts = users.get_profile_facts()
         num_of_messages, num_of_bids = auctions.get_auction_facts()
 
-        return render_template("profile.html", facts=facts, num_of_messages=num_of_messages, num_of_bids=num_of_bids)
+        return render_template("profile.html", facts=facts, num_of_messages=num_of_messages, num_of_bids=num_of_bids, username= username, admin=admin)
     
     if request.method == "POST":
         password = request.form["password"]
@@ -119,12 +140,18 @@ def profile():
 
 @app.route("/search")
 def search():
+    user = users.is_logged()
+    username = user[0:3]+"..."
+    admin = users.is_admin()
     auctions.update_auctions()
-    return render_template("search.html")
+    return render_template("search.html", username= username, admin=admin)
     
 
 @app.route("/results", methods=["POST"])
 def results():
+    user = users.is_logged()
+    username = user[0:3]+"..."
+    admin = users.is_admin()
     _class = request.form["_class"]
     city = request.form["city"]
     condition = request.form["condition"]
@@ -134,16 +161,20 @@ def results():
     else: 
         auctions.update_auctions()
         open_auctions = auctions.result(_class, city, condition)
-        return render_template("results.html", auctions=open_auctions)
+        return render_template("results.html", auctions=open_auctions, username= username, admin=admin)
 
 
 @app.route("/auction/<int:id>", methods=["GET"])
 def auction(id):
+    admin = users.is_admin()
     if request.method=="GET":
+        user = users.is_logged()
+        username = user[0:3]+"..."
+        admin = users.is_admin()
         auction = auctions.get_auction(id)
         max_bid = auctions.get_auction_max_bid(id)
  
-        return render_template("auction.html",id=id, auction=auction, max_bid=max_bid)
+        return render_template("auction.html",id=id, auction=auction, max_bid=max_bid, username= username, admin=admin)
 
 @app.route("/show_front/<int:id>")
 def show_front(id):
@@ -168,3 +199,23 @@ def bid():
 
     auctions.make_bid(auction_id, user_id, bid)
     return redirect("/")
+
+@app.route("/messages", methods=["GET"])
+def messages():
+    if request.method=="GET":
+        user = users.is_logged()
+        username = user[0:3]+"..."
+        admin = users.is_admin()
+        return render_template("/messages.html", username= username, admin=admin)
+
+@app.route("/admin", methods=["GET", "POST"])
+def admin():
+    if request.method=="GET":
+        user = users.is_logged()
+        username = user[0:3]+"..."
+        admin = users.is_admin()
+        if admin:
+            return render_template("/admin.html", username= username, admin=admin)
+        else:
+            flash("Ei oikeuksia")
+            return render_template("/")
