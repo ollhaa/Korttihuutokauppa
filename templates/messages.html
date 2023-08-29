@@ -2,6 +2,10 @@
 
 {% block content %}
 
+{% for message in messages %}
+Viesti: {{ message.message }} <br>
+Luotu: {{ message.message_sent.strftime("%Y-%m-%d %H:%M:%S") }} <br>
 
+{% endfor %}
 
 {% endblock %}

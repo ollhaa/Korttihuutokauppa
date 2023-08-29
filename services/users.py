@@ -25,17 +25,59 @@ def is_logged():
 
 def is_admin():
     user_id = session.get("user_id")
-    print("user_id", user_id)
+    #print("user_id", user_id)
     try:
         sql = "SELECT id, admin FROM users WHERE id=:user_id"
         result = db.session.execute(text(sql), {"user_id":user_id})
         admin = result.fetchone()[1]
-        print("users", admin)
+        #print("users", admin)
     except:
-        print("except")
+        #print("except")
         return False
 
     return admin 
+
+def add_admin_rights(username, password):
+
+    #try:
+    #    sql = "SELECT id, admin FROM users WHERE username=:username"
+    #    result = db.session.execute(text(sql), {"username":username})
+    #    if not result[1]:
+    #        user_id = result[0]
+    #        sql2 = "UPDATE users SET last_modified = NOW(), admin = True WHERE id=:user_id"
+    #        db.session.execute(text(sql2), {"new_password":hash_value, "user_id":user_id})
+    #        db.session.commit()
+
+    #except:
+    #    return False
+
+    return False
+
+def send_message(username, message):
+    user_id_from = session.get("user_id")
+    if username == session.get("username"):
+        return False
+    try:
+        sql = "SELECT id, username FROM users WHERE username=:username"
+        result = db.session.execute(text(sql), {"username":username})
+        user_id_to = result.fetchone()[0]
+        sql2 = "INSERT INTO messages (user_id_from, user_id_to, message, message_sent) VALUES (:user_id_from, :user_id_to, :message, NOW())"
+        db.session.execute(text(sql2), {"user_id_from":user_id_from, "user_id_to":user_id_to, "message":message})
+        db.session.commit()
+    except:
+        return False
+
+    return True
+
+def get_last_messages():
+    user_id_to = session.get("user_id")
+    sql = "SELECT message, message_sent FROM messages WHERE user_id_to=:user_id_to"
+    result = db.session.execute(text(sql), {"user_id_to":user_id_to})
+    print("result", result)
+    messages = result.fetchall()
+    print(messages)
+    return messages
+
 
 def logout():
     del session["username"]

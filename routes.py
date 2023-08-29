@@ -10,7 +10,7 @@ def index():
         user = users.is_logged()
         username = user[0:3]+"..."
         admin = users.is_admin()
-        print("route",admin)
+        #print("route",admin)
         return render_template("index.html", username= username, admin=admin)
     else:
         return render_template("/login.html")
@@ -206,7 +206,9 @@ def messages():
         user = users.is_logged()
         username = user[0:3]+"..."
         admin = users.is_admin()
-        return render_template("/messages.html", username= username, admin=admin)
+        messages = users.get_last_messages()
+        print(messages)
+        return render_template("/messages.html", username= username, admin=admin, messages= messages)
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
@@ -219,3 +221,34 @@ def admin():
         else:
             flash("Ei oikeuksia")
             return render_template("/")
+    if request.method=="POST":
+        #print("tättähäärää!")
+        #print(request.args.get("id"))
+        if request.form.get("id","") =="1":
+            print("1")
+            username = request.form["username"]
+            password = request.form["password"]
+            if not users.add_admin_rights(username, password):
+                flash("Oikeuksien lisääminen epäonnistui")
+                return redirect("/admin")
+                
+            if users.add_admin_rights(username, password):
+                flash("Oikeudet lisättty!")
+                return redirect("/")
+                
+
+            return redirect("/")
+        if request.form.get("id","") =="2":
+            print("2")
+            username = request.form["username"]
+            message = request.form["message"]
+            if not users.send_message(username, message):
+                flash("Viestin lähettäminen epäonnistui")
+                return redirect("/admin")
+            if users.send_message(username, message):
+                flash("Viesti lähetetty!")
+                return redirect("/")
+            
+                
+
+

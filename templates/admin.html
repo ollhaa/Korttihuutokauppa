@@ -2,6 +2,31 @@
 
 {% block content %}
 
+{% for message in get_flashed_messages() %}
+    {{ message }}
+{% endfor %}
+
+<h2>LISÄÄ ADMIN-OIKEUKSIA:</h2>
+
+<form action="/admin" method="POST">
+    <p>Käyttäjän nimi:<br>
+    <input value = "1" type="hidden" type="text" name="id"></p>
+    <input type="text" name="username" required minlength="4" maxlength="10"></p>
+    <p>Salasanasi:<br>
+    <input type="password" name="password" required maxlength="10"></p>
+    <input type="submit" value="Lisää oikeudet">
+</form>
+<br>
+<br>
+<h2>LÄHETÄ VIESTI KÄYTTÄJÄLLE:</h2>
+
+<form action="/admin" method="POST">
+    <p>Käyttäjän nimi:<br>
+    <input value = "2" type="hidden" type="text" name="id"></p>
+    <input type="text" name="username" required minlength="4" maxlength="10"></p>
+    <textarea placeholder="Kirjoita viestisi" name="message" rows="3" cols="20" required maxlength="60"></textarea>
+    <p>
+    <input type="submit" value="Lähetä viesti">
 
 
 {% endblock %}
