@@ -37,30 +37,52 @@ def is_admin():
 
     return admin 
 
-def add_admin_rights(username, password):
+def add_admin_rights(to_username, password):
+    sql = "SELECT id, password FROM users WHERE id=:user_id"
+    user_id = session.get("user_id")
+    result = db.session.execute(text(sql), {"user_id":user_id})
+    user = result.fetchone()
+    hash_value = user.password
 
-    #try:
-    #    sql = "SELECT id, admin FROM users WHERE username=:username"
-    #    result = db.session.execute(text(sql), {"username":username})
-    #    if not result[1]:
-    #        user_id = result[0]
-    #        sql2 = "UPDATE users SET last_modified = NOW(), admin = True WHERE id=:user_id"
-    #        db.session.execute(text(sql2), {"new_password":hash_value, "user_id":user_id})
-    #        db.session.commit()
+    if not check_password_hash(hash_value, password):
+        return False
 
-    #except:
-    #    return False
-
-    return False
+    else: 
+        try: 
+            #print("try")
+            sql = "SELECT id, username, admin FROM users WHERE username=:to_username"
+            #username = session.get("username")
+            result = db.session.execute(text(sql), {"to_username":to_username})
+            user = result.fetchone()
+            #print("user", user)
+            #print("user.admin", user.admin)
+            if user.admin == True:
+                return False
+            else:
+                sql2 = "UPDATE users SET last_modified = NOW(), admin = True WHERE id =:to_user_id"
+                #print("user_id", user.id)
+                db.session.execute(text(sql2), {"to_user_id":user.id})
+                db.session.commit()
+                #print("commit")
+                return True
+        except:
+            #print("except")
+            return False
+            
+        
+    
 
 def send_message(username, message):
-    user_id_from = session.get("user_id")
     if username == session.get("username"):
         return False
+    
     try:
+        user_id_from = session.get("user_id")
         sql = "SELECT id, username FROM users WHERE username=:username"
         result = db.session.execute(text(sql), {"username":username})
+        #print("fetch_hone: ", result.fetchone())
         user_id_to = result.fetchone()[0]
+        print("user_id_to", user_id_to)
         sql2 = "INSERT INTO messages (user_id_from, user_id_to, message, message_sent) VALUES (:user_id_from, :user_id_to, :message, NOW())"
         db.session.execute(text(sql2), {"user_id_from":user_id_from, "user_id_to":user_id_to, "message":message})
         db.session.commit()
@@ -84,10 +106,22 @@ def logout():
     del session["user_id"]
 
 def register(username, password, mail):
+    
+    sql = "SELECT username, password, mail FROM users WHERE username=:username"
+    result = db.session.execute(text(sql), {"username":username})
+    #print("result", result)
+    user = result.fetchone()
+    print("user", user)
+    #print("user vrt",  user is not None)
+    if user is not None:
+        print("eka")
+        return False
+        print("toka")
+    
     hash_value = generate_password_hash(password)
     try:
-        sql = "INSERT INTO users (username, password,mail, created_at, last_modified, admin) VALUES (:username, :password, :mail, NOW(), NOW(), False)"
-        db.session.execute(text(sql), {"username":username, "password":hash_value, "mail":mail})
+        sql2 = "INSERT INTO users (username, password,mail, created_at, last_modified, admin) VALUES (:username, :password, :mail, NOW(), NOW(), False)"
+        db.session.execute(text(sql2), {"username":username, "password":hash_value, "mail":mail})
         db.session.commit()
     except:
         return False
@@ -127,8 +161,6 @@ def update_password(password, new_password, new_password2):
         return False
 
 
-def get_created():
-    pass
     
 def feedback(feedback):
     user_id = session.get("user_id")

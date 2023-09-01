@@ -49,16 +49,17 @@ def register():
         # TODO: tarkista sanat
         if len(username) <4 or len(username) >10:
             flash("Tarkista nimen pituus")
-            return render_template("/register.html")
+            #return render_template("/register.html")
         if len(password) <4 or len(password) >10:
             flash("Tarkista salasanan pituus")
         if password != password2:
             flash("Salasanat eivät ole samat")
         if "@" not in mail:
             flash("Sähköpostiosoite ei ole OK")
-        
-        if users.register(username, password, mail) == False:
-            flash("Käyttäjä on jo olemassa ja jokin muu virhe")
+        #print("route:", users.register(username, password, mail))
+        if not users.register(username, password, mail):
+            flash("Käyttäjä on jo olemassa tai jokin muu virhe")
+            #return render_template("/register.html")
         else:
             flash("Rekisteröinti onnistui")
             return render_template("/login.html")
@@ -231,13 +232,13 @@ def admin():
             if not users.add_admin_rights(username, password):
                 flash("Oikeuksien lisääminen epäonnistui")
                 return redirect("/admin")
-                
-            if users.add_admin_rights(username, password):
+            else:
+            #if users.add_admin_rights(username, password):
                 flash("Oikeudet lisättty!")
                 return redirect("/")
                 
 
-            return redirect("/")
+            #return redirect("/")
         if request.form.get("id","") =="2":
             print("2")
             username = request.form["username"]
@@ -245,7 +246,8 @@ def admin():
             if not users.send_message(username, message):
                 flash("Viestin lähettäminen epäonnistui")
                 return redirect("/admin")
-            if users.send_message(username, message):
+            else:
+                #users.send_message(username, message):
                 flash("Viesti lähetetty!")
                 return redirect("/")
             
