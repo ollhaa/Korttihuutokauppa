@@ -4,6 +4,9 @@ from services import auctions
 from flask import Flask, render_template, redirect, request, session, make_response, flash
 from datetime import datetime, timedelta
 
+def test_job():
+    print("crontab")
+
 @app.route("/")
 def index():
     if users.is_logged():
@@ -98,10 +101,24 @@ def new():
         city = request.form["city"]
         file1 = request.files["file1"]
         name1 = file1.filename
+        if not name1.endswith(".jpg"):
+            flash("Väärä tiedostomuoto!")
+            return render_template("/new.html")
         data1 = file1.read()
+        print(len(data1))
+        if len(data1) > 1000*1024:
+            flash("Liian suuri tiedosto")
+            return render_template("/new.html")
         file2 = request.files["file2"]
         name2 = file2.filename
+        if not name2.endswith(".jpg"):
+            flash("Väärä tiedostomuoto!")
+            return render_template("/new.html")
         data2 = file2.read()
+        print(len(data2))
+        if len(data2) > 1000*1024:
+            flash("Liian suuri tiedosto")
+            return render_template("/new.html")
         bid_start = request.form["bid_start"]
         ending_time = request.form["ending_time"]
 
