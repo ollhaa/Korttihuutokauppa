@@ -120,7 +120,7 @@ def register(username, password, mail):
     
     hash_value = generate_password_hash(password)
     try:
-        sql2 = """INSERT INTO users (username, password,mail, created_at, last_modified, admin) VALUES (:username, :password, :mail, NOW(), NOW(), True)"""
+        sql2 = """INSERT INTO users (username, password,mail, created_at, last_modified, admin) VALUES (:username, :password, :mail, NOW(), NOW(), False)"""
         db.session.execute(text(sql2), {"username":username, "password":hash_value, "mail":mail})
         db.session.commit()
     except:
