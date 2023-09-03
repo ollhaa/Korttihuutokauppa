@@ -5,7 +5,8 @@ from flask import Flask, render_template, redirect, request, session, make_respo
 from datetime import datetime, timedelta
 
 def test_job():
-    print("crontab")
+    users.test()
+    #auctions.update_auctions()
 
 @app.route("/")
 def index():
@@ -20,7 +21,8 @@ def index():
 
 @app.route("/logout")
 def logout():
-    users.logout()
+    if auctions.update_winners():
+        users.logout()
     return redirect("/login")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -52,20 +54,23 @@ def register():
         # TODO: tarkista sanat
         if len(username) <4 or len(username) >10:
             flash("Tarkista nimen pituus")
-            #return render_template("/register.html")
+            return render_template("/register.html")
         if len(password) <4 or len(password) >10:
             flash("Tarkista salasanan pituus")
+            return render_template("/register.html")
         if password != password2:
             flash("Salasanat eivät ole samat")
+            return render_template("/register.html")
         if "@" not in mail:
             flash("Sähköpostiosoite ei ole OK")
+            return render_template("/register.html")
         #print("route:", users.register(username, password, mail))
         if not users.register(username, password, mail):
             flash("Käyttäjä on jo olemassa tai jokin muu virhe")
-            #return render_template("/register.html")
+            return render_template("/register.html")
         else:
             flash("Rekisteröinti onnistui")
-            return render_template("/login.html")
+            return redirect("/login")
 
 @app.route("/about")
 def about():
@@ -203,7 +208,7 @@ def show_front(id):
 
 @app.route("/show_back/<int:id>")
 def show_back(id):
-    data = auctions.show_front(id)
+    data = auctions.show_back(id)
     response = make_response(bytes(data))
     response.headers.set("Content-Type", "image/jpeg")
     return response
