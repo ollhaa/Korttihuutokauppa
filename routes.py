@@ -95,7 +95,7 @@ def new():
         user = users.is_logged()
         username = user[0:3]+"..."
         admin = users.is_admin()
-        tomorrow = datetime.today() + timedelta(1)
+        tomorrow = datetime.today() - timedelta(1)
         oneweek = datetime.today()+ timedelta(7)
         return render_template("new.html", tomorrow=tomorrow, oneweek=oneweek, username= username, admin=admin)
     if request.method == "POST":
@@ -127,12 +127,14 @@ def new():
         bid_start = request.form["bid_start"]
         ending_time = request.form["ending_time"]
 
-        if auctions.new(title, content, _class, condition, city,data1, data2,name1, name2, bid_start, ending_time):
-            flash("Tallennus onnistui!")
-            return redirect("/")
+        if not auctions.new(title, content, _class, condition, city,data1, data2,name1, name2, bid_start, ending_time):
+            flash("Tallennus ei onnistunut")
+            return render_template("/new.html")
+        
+        flash("Tallennus onnistui!")
+        return redirect("/")
             
-        flash("Tallennus ei onnistunut")
-        return render_template("/new.html")
+            
             
 
 
@@ -247,6 +249,19 @@ def admin():
     if request.method=="POST":
         #print("tättähäärää!")
         #print(request.args.get("id"))
+        if request.form.get("id","") =="0":
+            print("0")
+            #if not auctions.update_auctions():
+            #    flash("Päivittäminen epäonnistui")
+            #    return redirect("/admin")
+            if not auctions.update_final():
+                flash("Päivittäminen epäonnistui2")
+                return redirect("/admin")
+            else:
+                flash("Päivittäminen onnistui!")
+                return redirect("/")
+            
+
         if request.form.get("id","") =="1":
             print("1")
             username = request.form["username"]

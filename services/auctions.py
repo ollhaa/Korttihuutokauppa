@@ -37,34 +37,57 @@ def new(title, content, _class, condition, city,data1, data2,name1, name2, bid_s
 
 def update_auctions():
     print("toimiiko")
-    sql = """UPDATE auctions SET active = False WHERE ending_time < NOW()"""
-    db.session.execute(text(sql))
-    db.session.commit()
+    try:
+        sql = """UPDATE auctions SET active = False WHERE ending_time < NOW()"""
+        db.session.execute(text(sql))
+        db.session.commit()
+    except:
+        return False
+    return True
 
 def update_winners():
-    update_auctions()
+    #update_auctions()
     try:
-        sql= "SELECT id,user_id FROM auctions WHERE winner_id != user_id AND solved = False"
+        sql= "SELECT id,user_id FROM auctions WHERE solved = False"
         result = db.session.execute(text(sql))
         todo = result.fetchall()
+        if not todo:
+            print("eka")
+            return True
         print("todo: ", todo)
         for x in todo:
-            print("x:", x)
-            sql1 = """UPDATE auctions SET winner_id = (SELECT user_id FROM bids GROUP BY auction_id WHERE bid = MAX(bid) AND auction_id =:x)"""
-            db.session.execute(text(sql1),{"x":x[0]})
+            print("x0:", type(x[0]))
+            sql1 = """UPDATE auctions SET winner_id = COALESCE((SELECT user_id FROM bids WHERE auction_id =:x  ORDER BY bid DESC LIMIT 1),:user_id) WHERE id =:id"""
+            db.session.execute(text(sql1),{"x":x[0],"user_id":x[1], "id":x[0]})
+        
+        db.session.commit()
 
+    except:
+        return False
+
+    return True
+
+def update_final():
+    try:
+        
+        #print("eka for ok")
         
         sql2= "SELECT auctions.id, auctions.title, auctions.user_id, auctions.winner_id, users.mail FROM auctions, users \
-        WHERE auctions.solved = False AND auctions.user_id = users.mail"
-        db.session.excute(text(sql2))
+        WHERE auctions.solved = False AND auctions.user_id = users.id"
+        result = db.session.execute(text(sql2))
+        #print("tätä")
         todo2 = result.fetchall()
-        print("todo2: ", todo2 )
+        if not todo2:
+            print("toka")
+            return True
+        #print("todo2: ", todo2 )
         for x in todo2:
             print("x: ", x)
-            message = "Olet voittanut huutokaupan", x[0],":", x[1], "Voit ottaa yhteyttä mailiin: ", x[5]
+            message = "Olet voittanut huutokaupan " + str(x[0]) + ": " + str(x[1]) + ". Voit nyt ottaa yhteyttä mailiin: " + str(x[4]) +"."
+            print(message)
             sql3 = """INSERT INTO messages (user_id_from, user_id_to, message, message_sent) VALUES (:user_id_from, :user_id_to, :message, NOW())"""
-            db.session.execute(text(sql3),{"user_id_from":0, "user_id_to":x[3],"message":message})
-
+            db.session.execute(text(sql3),{"user_id_from":4, "user_id_to":x[3],"message":message})
+        print("kolmas")
         sql4 = """UPDATE auctions SET solved = True WHERE ending_time < NOW() AND solved = False"""
         db.session.execute(text(sql4))
         db.session.commit()

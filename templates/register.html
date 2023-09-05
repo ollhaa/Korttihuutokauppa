@@ -16,7 +16,7 @@
 
 <h2>REKISTERÖIDY</h2>
 <br>
-    <form action="/register" method="POST">
+    <form action="/register" method="POST" onsubmit="return check(this)">
         <p>Anna haluamasi tunnus (4-10 merkkiä):<br>
         <input type="text" name="username"></p>
         <p>Sähköpostiosoitteesi:<br>
@@ -28,5 +28,14 @@
         <input type="submit" value="Lähetä">
         <input type="reset" value="Tyhjennä">
     </form>
+    <script>
+        function check(form) {
+            if (form.username.value.length > 10) {
+                alert("Otsikko on liian pitkä");
+                return false;
+            }
+            return true;
+        }
+    </script>
 <br>    
 {% endblock %}

@@ -6,6 +6,14 @@
     {{ message }}
 {% endfor %}
 
+<h2>PÄIVITÄ HUUTOKAUPAT</h2>
+
+<form action="/admin" method="POST">
+    <input value = "0" type="hidden" type="text" name="id"></p>
+    <input type="submit" value="Päivitä">
+</form>
+<br>
+
 <h2>LISÄÄ ADMIN-OIKEUKSIA:</h2>
 
 <form action="/admin" method="POST">
