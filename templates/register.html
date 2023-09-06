@@ -31,10 +31,22 @@
     <script>
         function check(form) {
             if (form.username.value.length > 10) {
-                alert("Otsikko on liian pitkä");
+                alert(" on liian pitkä");
                 return false;
             }
+            if (form.username.value.length < 4) {
+                alert(" on liian pitkä");
+                return false;
+            }
+            if (form.password.value.length > 10) {
+                alert(" on liian pitkä");
+                return false;
+            }
+            if (form.password.value.length < 4) {
+                alert(" on liian lyhyt");
+                return false;
             return true;
+            }
         }
     </script>
 <br>    

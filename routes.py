@@ -157,10 +157,11 @@ def profile():
         new_password = request.form["new_password"]
         new_password2 = request.form["new_password2"]
 
-        if users.update_password(password, new_password, new_password2):
-                return redirect("/")
+        if users.update_password(password, new_password):
+            flash("Salasana vaihdettu")
+            return redirect("/")
 
-    return render_template("/logout")
+    return redirect("/logout")
 
 
 @app.route("/search")
@@ -251,10 +252,12 @@ def admin():
         #print(request.args.get("id"))
         if request.form.get("id","") =="0":
             print("0")
-            #if not auctions.update_auctions():
-            #    flash("Päivittäminen epäonnistui")
-            #    return redirect("/admin")
-            if not auctions.update_final():
+            if not auctions.update_auctions():
+                flash("Päivittäminen epäonnistui")
+                return redirect("/admin")
+            elif not auctions.update_winners():
+                flash("Päivittäminen epäonnistui3")
+            elif not auctions.update_final():
                 flash("Päivittäminen epäonnistui2")
                 return redirect("/admin")
             else:

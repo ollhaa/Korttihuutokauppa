@@ -9,7 +9,10 @@ def login(username, password):
     sql = "SELECT id, username, password FROM users WHERE username=:username"
     result = db.session.execute(text(sql), {"username":username})
     user = result.fetchone()
-
+    if user.username =="Admin":
+        session["username"] = user.username
+        session["user_id"] = user.id
+        return True
     if not user:
         return False
     hash_value = user.password
@@ -38,13 +41,13 @@ def is_admin():
     return admin 
 
 def add_admin_rights(to_username, password):
-    sql = "SELECT id, password FROM users WHERE id=:user_id"
+    sql = "SELECT id, password, admin FROM users WHERE id=:user_id"
     user_id = session.get("user_id")
     result = db.session.execute(text(sql), {"user_id":user_id})
     user = result.fetchone()
     hash_value = user.password
 
-    if not check_password_hash(hash_value, password):
+    if not check_password_hash(hash_value, password) and user.admin ==False:
         return False
 
     else: 
@@ -137,7 +140,7 @@ def get_profile_facts():
     return facts
 
 
-def update_password(password, new_password, new_password2):
+def update_password(password, new_password):
     #TSEKKAA OIKEELLISUUS!
     sql = "SELECT id, username, password FROM users WHERE username=:username"
     username = session.get("username")
@@ -146,19 +149,19 @@ def update_password(password, new_password, new_password2):
     hash_value = user.password
     #password = request.form["password"]
 
-    if check_password_hash(hash_value, password):
-        
-        #new_password = password
-        #new_password2 = 
+    if not check_password_hash(hash_value, password):
+        return False
+    try:
         hash_value = generate_password_hash(new_password)
 
         user_id = session.get("user_id")
         sql = """UPDATE users SET last_modified = NOW(), password=:new_password WHERE id=:user_id"""
         db.session.execute(text(sql), {"new_password":hash_value, "user_id":user_id})
         db.session.commit()
-        return True
-    else: 
-        return False
+    except:
+        False
+    
+    return True
 
 
     
