@@ -148,7 +148,6 @@ def profile():
         admin = users.is_admin()
         facts = users.get_profile_facts()
         num_of_messages, num_of_bids = auctions.get_auction_facts()
-
         return render_template("profile.html", facts=facts, num_of_messages=num_of_messages, num_of_bids=num_of_bids, username= username, admin=admin)
     
     if request.method == "POST":
@@ -163,7 +162,6 @@ def profile():
 
     return redirect("/logout")
 
-
 @app.route("/search")
 def search():
     user = users.is_logged()
@@ -172,7 +170,6 @@ def search():
     auctions.update_auctions()
     return render_template("search.html", username= username, admin=admin)
     
-
 @app.route("/results", methods=["POST"])
 def results():
     user = users.is_logged()
@@ -189,7 +186,6 @@ def results():
         open_auctions = auctions.result(_class, city, condition)
         return render_template("results.html", auctions=open_auctions, username= username, admin=admin)
 
-
 @app.route("/auction/<int:id>", methods=["GET"])
 def auction(id):
     admin = users.is_admin()
@@ -199,7 +195,6 @@ def auction(id):
         admin = users.is_admin()
         auction = auctions.get_auction(id)
         max_bid = auctions.get_auction_max_bid(id)
- 
         return render_template("auction.html",id=id, auction=auction, max_bid=max_bid, username= username, admin=admin)
 
 @app.route("/show_front/<int:id>")
@@ -233,7 +228,6 @@ def messages():
         username = user[0:3]+"..."
         admin = users.is_admin()
         messages = users.get_last_messages()
-        print(messages)
         return render_template("/messages.html", username= username, admin=admin, messages= messages)
 
 @app.route("/admin", methods=["GET", "POST"])
@@ -248,10 +242,7 @@ def admin():
             flash("Ei oikeuksia")
             return render_template("/")
     if request.method=="POST":
-        #print("tättähäärää!")
-        #print(request.args.get("id"))
         if request.form.get("id","") =="0":
-            print("0")
             if not auctions.update_auctions():
                 flash("Päivittäminen epäonnistui")
                 return redirect("/admin")
@@ -264,33 +255,23 @@ def admin():
                 flash("Päivittäminen onnistui!")
                 return redirect("/")
             
-
         if request.form.get("id","") =="1":
-            print("1")
             username = request.form["username"]
             password = request.form["password"]
             if not users.add_admin_rights(username, password):
                 flash("Oikeuksien lisääminen epäonnistui")
                 return redirect("/admin")
             else:
-            #if users.add_admin_rights(username, password):
                 flash("Oikeudet lisättty!")
                 return redirect("/")
-                
 
-            #return redirect("/")
         if request.form.get("id","") =="2":
-            print("2")
             username = request.form["username"]
             message = request.form["message"]
             if not users.send_message(username, message):
                 flash("Viestin lähettäminen epäonnistui")
                 return redirect("/admin")
             else:
-                #users.send_message(username, message):
                 flash("Viesti lähetetty!")
                 return redirect("/")
-            
                 
-
-

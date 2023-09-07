@@ -1,6 +1,5 @@
 from flask import session
 from sqlalchemy.sql import text
-#from datetime import datetime, timedelta
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 
@@ -8,7 +7,6 @@ def new(title, content, _class, condition, city,data1, data2,name1, name2, bid_s
     user_id = session.get("user_id")
     if len(title.replace(" ", "")) < 5 or len(content.replace(" ", "")) < 10:
         return False
-
     try:
         sql1 = """INSERT INTO auctions (user_id, title, content, _class, condition, city, bid_start, created_at, ending_time, active, winner_id) \
         VALUES (:user_id, :title, :content, :_class, :condition, :city, :bid_start, NOW(), :ending_time, True, 0)"""
@@ -24,19 +22,14 @@ def new(title, content, _class, condition, city,data1, data2,name1, name2, bid_s
 
         sql2 = """INSERT INTO images (auction_id, name, data) VALUES (:auction_id, :name, :data)"""
         db.session.execute(text(sql2), {"auction_id":auction_id, "name":name1, "data":data1})
-
         sql3 = """INSERT INTO images (auction_id, name, data) VALUES (:auction_id, :name, :data)"""
         db.session.execute(text(sql3), {"auction_id":auction_id, "name":name2, "data":data2})
-
         db.session.commit()
-    
     except:
         return False
-    
     return True
 
 def update_auctions():
-    print("toimiiko")
     try:
         sql = """UPDATE auctions SET active = False WHERE ending_time < NOW()"""
         db.session.execute(text(sql))
@@ -46,48 +39,32 @@ def update_auctions():
     return True
 
 def update_winners():
-    #update_auctions()
     try:
         sql= "SELECT id,user_id FROM auctions WHERE solved = False"
         result = db.session.execute(text(sql))
         todo = result.fetchall()
         if not todo:
-            print("eka")
             return True
-        print("todo: ", todo)
         for x in todo:
-            print("x0:", type(x[0]))
             sql1 = """UPDATE auctions SET winner_id = COALESCE((SELECT user_id FROM bids WHERE auction_id =:x  ORDER BY bid DESC LIMIT 1),:user_id) WHERE id =:id"""
             db.session.execute(text(sql1),{"x":x[0],"user_id":x[1], "id":x[0]})
-        
         db.session.commit()
-
     except:
         return False
-
     return True
 
 def update_final():
     try:
-        
-        #print("eka for ok")
-        
         sql2= "SELECT auctions.id, auctions.title, auctions.user_id, auctions.winner_id, users.mail FROM auctions, users \
         WHERE auctions.solved = False AND auctions.user_id = users.id"
         result = db.session.execute(text(sql2))
-        #print("tätä")
         todo2 = result.fetchall()
         if not todo2:
-            print("toka")
             return True
-        #print("todo2: ", todo2 )
         for x in todo2:
-            print("x: ", x)
-            message = "Olet voittanut huutokaupan " + str(x[0]) + ": " + str(x[1]) + ". Voit nyt ottaa yhteyttä mailiin: " + str(x[4]) +"."
-            print(message)
+            message = "Olet voittanut huutokaupan " + str(x[0]) + ": " + str(x[1]) + " (tai se on aloittamasi). Voit nyt ottaa yhteyttä mailiin: " + str(x[4]) +"."
             sql3 = """INSERT INTO messages (user_id_from, user_id_to, message, message_sent) VALUES (:user_id_from, :user_id_to, :message, NOW())"""
             db.session.execute(text(sql3),{"user_id_from":4, "user_id_to":x[3],"message":message})
-        print("kolmas")
         sql4 = """UPDATE auctions SET solved = True WHERE ending_time < NOW() AND solved = False"""
         db.session.execute(text(sql4))
         db.session.commit()
@@ -100,11 +77,9 @@ def get_auction_facts():
     sql2 = "SELECT COUNT(*) FROM auctions WHERE user_id=:user_id"
     result2 = db.session.execute(text(sql2), {"user_id":user_id})
     num_of_messages = result2.fetchone()[0]
-
     sql3 = "SELECT COUNT(*) FROM bids WHERE user_id=:user_id"
     result3 = db.session.execute(text(sql3), {"user_id":user_id})
     num_of_bids = result3.fetchone()[0]
-
     return num_of_messages, num_of_bids
 
 def get_auction(id):
@@ -121,13 +96,9 @@ def get_auction_max_bid(id):
     return max_bid
 
 def result(_class, city, condition):
-    #if _class is None or city is None or condition is None:
-    #    return False
-
     if _class == "Kaikki" and city == "Kaikki" and condition == "Kaikki":
         sql = "SELECT id, title,content, _class,condition, city, bid_start, created_at, ending_time FROM auctions WHERE active=True ORDER BY id DESC"
         result = db.session.execute(text(sql))
-
     elif  _class == "Kaikki" and city == "Kaikki":
         sql ="SELECT id, title,content, _class,condition, city, bid_start, created_at, ending_time FROM auctions WHERE active=True AND condition=:condition ORDER BY id DESC"
         result = db.session.execute(text(sql), {"condition":condition})
@@ -137,7 +108,6 @@ def result(_class, city, condition):
     elif city =="Kaikki" and condition =="Kaikki":
         sql = "SELECT id, title,content, _class,condition, city, bid_start, created_at, ending_time FROM auctions WHERE active=True AND _class=:_class ORDER BY id DESC"
         result = db.session.execute(text(sql), {"_class":_class})
-
     elif _class == "Kaikki":
         sql = "SELECT id, title,content, _class,condition, city, bid_start, created_at, ending_time FROM auctions WHERE active=True AND city=:city AND condition=:condition ORDER BY id DESC"
         result = db.session.execute(text(sql), {"city":city, "condition":condition})
@@ -147,13 +117,10 @@ def result(_class, city, condition):
     elif condition == "Kaikki":
         sql = "SELECT id, title,content, _class,condition, city, bid_start, created_at, ending_time FROM auctions WHERE active=True AND _class=:_class AND city=:city ORDER BY id DESC"
         result = db.session.execute(text(sql), {"_class":_class, "city":city})
-
     else:
         sql = "SELECT id, title,content, _class,condition, city, bid_start, created_at, ending_time FROM auctions WHERE active=True AND _class=:_class AND city=:city AND condition=:condition ORDER BY id DESC"
         result = db.session.execute(text(sql), {"_class":_class, "city":city, "condition":condition})
-
     auctions = result.fetchall()
-    
     return auctions
 
 def show_front(id):
@@ -175,18 +142,15 @@ def make_bid(auction_id, user_id, bid):
     sql2 = "SELECT bid_start FROM auctions WHERE id=:auction_id"
     result = db.session.execute(text(sql2),{"auction_id":auction_id})
     start_price = result.fetchone()[0]
-    print("start_price", start_price)
     if max_price is None:
         new_price = int(start_price) + int(bid)
     else:
         new_price = int(max_price) + int(bid)
-
     sql = "SELECT active from auctions WHERE id=:auction_id"
     result = db.session.execute(text(sql),{"auction_id":auction_id})
     if result.fetchone()[0]:
         sql1 = """INSERT INTO bids (user_id, auction_id, bid, bid_time) VALUES (:user_id, :auction_id, :bid, NOW())"""
         db.session.execute(text(sql1), { "user_id":user_id, "auction_id":auction_id, "bid":new_price})
-
         db.session.commit()
 
 
