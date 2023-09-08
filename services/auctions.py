@@ -5,25 +5,28 @@ from db import db
 
 def new(title, content, _class, condition, city,data1, data2,name1, name2, bid_start, ending_time):
     user_id = session.get("user_id")
-    if len(title.replace(" ", "")) < 5 or len(content.replace(" ", "")) < 10:
+    print("here")
+    if len(title) < 5 or len(content) < 10:
         return False
     try:
+        print("here2")
         sql1 = """INSERT INTO auctions (user_id, title, content, _class, condition, city, bid_start, created_at, ending_time, active, winner_id) \
-        VALUES (:user_id, :title, :content, :_class, :condition, :city, :bid_start, NOW(), :ending_time, True, 0)"""
+        VALUES (:user_id, :title, :content, :_class, :condition, :city, :bid_start, NOW(), :ending_time, True, :winner_id)"""
         db.session.execute(text(sql1), {"user_id":user_id, "title":title, "content":content, "_class":_class, "condition":condition, "city":city, \
         "bid_start":bid_start, "ending_time":ending_time, "winner_id":user_id})
 
-        sql = "SELECT id FROM auctions ORDER BY id DESC LIMIT 1" 
-        rows = db.session.execute(text(sql))
-        if rows is None:
-            auction_id = 1
-        else: 
-            auction_id = rows.fetchone()[0]
+        print("here3")
+        sql = "SELECT id FROM auctions WHERE title =:title"
+        rows = db.session.execute(text(sql), {"title":title})
+        print(rows)
 
-        sql2 = """INSERT INTO images (auction_id, name, data) VALUES (:auction_id, :name, :data)"""
-        db.session.execute(text(sql2), {"auction_id":auction_id, "name":name1, "data":data1})
-        sql3 = """INSERT INTO images (auction_id, name, data) VALUES (:auction_id, :name, :data)"""
-        db.session.execute(text(sql3), {"auction_id":auction_id, "name":name2, "data":data2})
+        auction_id = rows.fetchone()[0]
+
+        print("a_id", auction_id)
+        sql2 = """INSERT INTO images (auction_id, name,frontside, data) VALUES (:auction_id, :name, :frontside, :data)"""
+        db.session.execute(text(sql2), {"auction_id":auction_id, "name":name1, "frontside":True, "data":data1})
+        sql3 = """INSERT INTO images (auction_id, name, frontside, data) VALUES (:auction_id, :name, :frontside, :data)"""
+        db.session.execute(text(sql3), {"auction_id":auction_id, "name":name2, "frontside":False, "data":data2})
         db.session.commit()
     except:
         return False
@@ -124,14 +127,14 @@ def result(_class, city, condition):
     return auctions
 
 def show_front(id):
-    sql3 = "SELECT data FROM images WHERE auction_id=:auction_id"
-    result3 = db.session.execute(text(sql3),{"auction_id":id})
+    sql3 = "SELECT data FROM images WHERE auction_id=:auction_id AND frontside=:frontside"
+    result3 = db.session.execute(text(sql3),{"auction_id":id, "frontside":True})
     data = result3.fetchone()[0]
     return data
 
 def show_back(id):
-    sql3 = "SELECT data FROM images WHERE auction_id=:auction_id AND id=:apu"
-    result3 = db.session.execute(text(sql3),{"auction_id":id, "apu":id+1})
+    sql3 = "SELECT data FROM images WHERE auction_id=:auction_id AND frontside=:frontside"
+    result3 = db.session.execute(text(sql3),{"auction_id":id, "frontside":False})
     data = result3.fetchone()[0]
     return data
 

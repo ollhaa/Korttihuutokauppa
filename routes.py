@@ -51,7 +51,6 @@ def register():
         password = request.form["password"]
         password2 = request.form["password2"]
         mail = request.form["mail"]
-        # TODO: tarkista sanat
         if len(username) <4 or len(username) >10:
             flash("Tarkista nimen pituus")
             return render_template("/register.html")
@@ -64,7 +63,6 @@ def register():
         if "@" not in mail:
             flash("Sähköpostiosoite ei ole OK")
             return render_template("/register.html")
-        #print("route:", users.register(username, password, mail))
         if not users.register(username, password, mail):
             flash("Käyttäjä on jo olemassa tai jokin muu virhe")
             return render_template("/register.html")
@@ -95,7 +93,7 @@ def new():
         user = users.is_logged()
         username = user[0:3]+"..."
         admin = users.is_admin()
-        tomorrow = datetime.today() - timedelta(1)
+        tomorrow = datetime.today() + timedelta(1)
         oneweek = datetime.today()+ timedelta(7)
         return render_template("new.html", tomorrow=tomorrow, oneweek=oneweek, username= username, admin=admin)
     if request.method == "POST":
@@ -110,7 +108,6 @@ def new():
             flash("Väärä tiedostomuoto!")
             return render_template("/new.html")
         data1 = file1.read()
-        print(len(data1))
         if len(data1) > 1000*1024:
             flash("Liian suuri tiedosto")
             return render_template("/new.html")
@@ -120,7 +117,6 @@ def new():
             flash("Väärä tiedostomuoto!")
             return render_template("/new.html")
         data2 = file2.read()
-        print(len(data2))
         if len(data2) > 1000*1024:
             flash("Liian suuri tiedosto")
             return render_template("/new.html")
@@ -129,7 +125,7 @@ def new():
 
         if not auctions.new(title, content, _class, condition, city,data1, data2,name1, name2, bid_start, ending_time):
             flash("Tallennus ei onnistunut")
-            return render_template("/new.html")
+            return redirect("/new")
         
         flash("Tallennus onnistui!")
         return redirect("/")
