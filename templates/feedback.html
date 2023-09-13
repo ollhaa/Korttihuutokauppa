@@ -5,9 +5,10 @@
 <br>
 <form action="/feedback" method="POST">
     Palaute: <br>
-    <textarea name="feedback" rows="3" cols="40"></textarea>
+    <textarea name="feedback" rows="3" cols="40" required maxlength="120"></textarea>
     <br>
     <input type="submit" value="Lähetä">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
 <br>    
 {% endblock %}

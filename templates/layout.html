@@ -17,20 +17,20 @@
       <nav>
       {% block nav %}
         <ul>
-          <li> <b> LOGGED AS: {{ username }} </b> </li>
-          <li><a href="/">HOME</a></li>
+          <li> <b> KIRJAUTUNUT: {{ username }} </b> </li>
+          <li><a href="/">ETUSIVU</a></li>
           
-          <li><a href="/new">NEW</a></li>
-          <li><a href="/search">SEARCH</a></li>
-          <li><a href="/profile">PROFILE</a></li>
-          <li><a href="/messages">MESSAGES</a></li>
-          <li><a href="/feedback">FEEDBACK</a></li>
+          <li><a href="/new">UUSI</a></li>
+          <li><a href="/search">HAKU</a></li>
+          <li><a href="/profile">PROFIILI</a></li>
+          <li><a href="/messages">VIESTIT</a></li>
+          <li><a href="/feedback">ANNA PALAUTETTA</a></li>
 
           {% if admin %}
-          <li><a href="/admin">ADMIN</a></li>
+          <li><a href="/admin">YLLÄPITÄJÄ</a></li>
           {% endif %}
 
-          <li><a href="/logout">LOGOUT</a> </li>
+          <li><a href="/logout">ULOSKIRJAUS</a> </li>
           
 
           

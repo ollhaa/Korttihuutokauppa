@@ -10,7 +10,7 @@ Kuvaus: {{ auction.content }} <br>
 Luokka: {{ auction._class }} <br>
 Kaupunki: {{ auction.city }} <br>
 Kunto: {{ auction.condition }} <br>
-Aloitettu: {{ auction.created_at }} <br>
+Aloitettu: {{ auction.created_at.strftime("%Y-%m-%d %H:%M:%S") }} <br>
 Aloitushinta: {{ auction.bid_start }} <br>
 Päättyy: {{ auction.ending_time }} <br>
 <p>
@@ -32,6 +32,7 @@ Milloin: {{ max_bid.bid_time }} <br>
     <p>
 <input type="submit" value="Tee tarjous">
 <input type="hidden" name="auction_id" value="{{ id }}">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <br>
 </form>
 <br>

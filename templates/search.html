@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2>Search</h2>
+<h2>HAE HUUTOKAUPPOJA</h2>
 
 <form action="/results" method="POST">
     LUOKKA: <br>
@@ -30,6 +30,7 @@
     <p>
 
     <input type="submit" value="Hae">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
 
 {% endblock %}

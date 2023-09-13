@@ -3,9 +3,6 @@ body {
     background-image: url("huutokauppa_tausta.jpg");
 }
 
-
-
-
 .header {
     margin: auto;
     max-width: 100em;
@@ -14,7 +11,6 @@ body {
     padding: 0px 0px 0px 0px;
     background-color: rgb(70, 122, 156);
     border-radius: 20px 20px 0px 0px;
-  
     border: solid;
     border-color: rgb(23, 25, 26);
   }
@@ -22,7 +18,7 @@ body {
   .basic {
     margin: auto;
     max-width: 100em;
-    max-height: 100em;
+    max-height: 100em; 
     background-color: rgb(70, 122, 156);
     border: solid;
     border-color: rgb(23, 25, 26);

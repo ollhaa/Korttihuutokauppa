@@ -2,8 +2,8 @@
 
 {% block nav %}
         <ul>
-          <li><a href="/register">REGISTER</a></li>
-          <li><a href="/about">ABOUT</a></li>
+          <li><a href="/register">REKISTERÖIDY</a></li>
+          <li><a href="/about">TIETOA</a></li>
 
         </ul>
 {% endblock %}
@@ -22,6 +22,7 @@
         <p>Salasana:<br>
         <input type="password" name="password"></p>
         <input type="submit" value="Kirjaudu">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
 <br>    
 {% endblock %}

@@ -1,4 +1,5 @@
-from flask import session
+import os
+from flask import session, request
 from sqlalchemy.sql import text
 from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
@@ -10,6 +11,7 @@ def login(username, password):
     if user.username =="Admin":
         session["username"] = user.username
         session["user_id"] = user.id
+        
         return True
     if not user:
         return False
@@ -19,6 +21,7 @@ def login(username, password):
     else:
         session["username"] = user.username
         session["user_id"] = user.id
+        session["csrf_token"] = os.urandom(16).hex()
     return True
 
 def is_logged():
@@ -33,6 +36,10 @@ def is_admin():
     except:
         return False
     return admin 
+
+def check_csrf():
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
 
 def add_admin_rights(to_username, password):
     sql = "SELECT id, password, admin FROM users WHERE id=:user_id"
@@ -132,7 +139,10 @@ def update_password(password, new_password):
     
 def feedback(feedback):
     user_id = session.get("user_id")
-    sql = """INSERT INTO feedbacks (user_id, feedback, feedback_time) VALUES (:user_id, :feedback, NOW())"""
-    db.session.execute(text(sql), {"user_id": user_id, "feedback":feedback})
-    db.session.commit()
-    
+    try: 
+        sql = """INSERT INTO feedbacks (user_id, feedback, feedback_time) VALUES (:user_id, :feedback, NOW())"""
+        db.session.execute(text(sql), {"user_id": user_id, "feedback":feedback})
+        db.session.commit()
+    except:
+        return False
+    return True

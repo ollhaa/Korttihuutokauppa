@@ -2,8 +2,8 @@
 
 {% block nav %}
         <ul>
-            <li><a href="/login">LOGIN</a></li>
-            <li><a href="/about">ABOUT</a></li>
+            <li><a href="/login">KIRJAUDU</a></li>
+            <li><a href="/about">TIETOA</a></li>
 
         </ul>
 {% endblock %}
@@ -27,6 +27,7 @@
         <input type="password" name="password2"></p>
         <input type="submit" value="Lähetä">
         <input type="reset" value="Tyhjennä">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
     <script>
         function check(form) {

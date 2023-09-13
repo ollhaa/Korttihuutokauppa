@@ -11,6 +11,7 @@
 <form action="/admin" method="POST">
     <input value = "0" type="hidden" type="text" name="id"></p>
     <input type="submit" value="Päivitä">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <br>
 
@@ -23,6 +24,7 @@
     <p>Salasanasi:<br>
     <input type="password" name="password" required maxlength="10"></p>
     <input type="submit" value="Lisää oikeudet">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 <br>
 <br>
@@ -35,6 +37,7 @@
     <textarea placeholder="Kirjoita viestisi" name="message" rows="3" cols="20" required maxlength="60"></textarea>
     <p>
     <input type="submit" value="Lähetä viesti">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
 
 {% endblock %}

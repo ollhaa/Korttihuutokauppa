@@ -4,41 +4,31 @@ from services import auctions
 from flask import Flask, render_template, redirect, request, session, make_response, flash
 from datetime import datetime, timedelta
 
-def test_job():
-    users.test()
-    #auctions.update_auctions()
-
 @app.route("/")
 def index():
     if users.is_logged():
         user = users.is_logged()
         username = user[0:3]+"..."
         admin = users.is_admin()
-        #print("route",admin)
         return render_template("index.html", username= username, admin=admin)
     else:
         return render_template("/login.html")
 
 @app.route("/logout")
 def logout():
-    if auctions.update_winners():
-        users.logout()
+    users.logout()
     return redirect("/login")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    error = None
     if request.method =="GET":
        return render_template("login.html")
     if request.method=="POST": 
         username = request.form["username"]
         password = request.form["password"]
-        # TODO: tarkista sanat
 
         if not users.login(username, password):
-            #flash("Salasana ja käyttäjätunnus OK")
-            error = "Salasana tai käyttäjätunnus väärin!"
-            flash(error)
+            flash("Salasana tai käyttäjätunnus väärin!")
 
         return redirect("/")
 
@@ -47,6 +37,7 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
     if request.method=="POST":
+        users.check_csrf()
         username = request.form["username"]
         password = request.form["password"]
         password2 = request.form["password2"]
@@ -82,8 +73,14 @@ def send_feedback():
         admin = users.is_admin()
         return render_template("feedback.html", username= username, admin=admin)
     if request.method == "POST":
+        users.check_csrf()
         feedback = request.form["feedback"]
-        users.feedback(feedback)
+        if len(feedback) > 120:
+            flash("Palautteen antaminen ei onnistunut")
+        if not users.feedback(feedback):
+            flash("Palautteen antaminen ei onnistunut")
+        else: 
+            flash("Palautteen antaminen onnistui!")
         return redirect("/")
 
 @app.route("/new", methods=["GET", "POST"])
@@ -97,6 +94,7 @@ def new():
         oneweek = datetime.today()+ timedelta(7)
         return render_template("new.html", tomorrow=tomorrow, oneweek=oneweek, username= username, admin=admin)
     if request.method == "POST":
+        users.check_csrf()
         title = request.form["title"]
         content = request.form["content"]
         _class = request.form["_class"]
@@ -129,11 +127,6 @@ def new():
         
         flash("Tallennus onnistui!")
         return redirect("/")
-            
-            
-            
-
-
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
@@ -147,10 +140,12 @@ def profile():
         return render_template("profile.html", facts=facts, num_of_messages=num_of_messages, num_of_bids=num_of_bids, username= username, admin=admin)
     
     if request.method == "POST":
+        users.check_csrf()
         password = request.form["password"]
             
         new_password = request.form["new_password"]
         new_password2 = request.form["new_password2"]
+        #TSEKKAA PITUUDET
 
         if users.update_password(password, new_password):
             flash("Salasana vaihdettu")
@@ -168,6 +163,7 @@ def search():
     
 @app.route("/results", methods=["POST"])
 def results():
+    users.check_csrf()
     user = users.is_logged()
     username = user[0:3]+"..."
     admin = users.is_admin()
@@ -209,12 +205,15 @@ def show_back(id):
 
 @app.route("/bid", methods= ["POST"])
 def bid():
+    users.check_csrf()
     auctions.update_auctions()
     bid = request.form["bid"]
     auction_id =request.form["auction_id"]
-    user_id = session.get("user_id")
-
-    auctions.make_bid(auction_id, user_id, bid)
+    #TSEKKAA KOROTUS
+    if auctions.make_bid(auction_id, bid):
+        flash("Korotus onnistui!")
+    else:
+        flash("Korotus epäonnistui tai yritit osallistua tekemääsi huutokauppaan!")
     return redirect("/")
 
 @app.route("/messages", methods=["GET"])
@@ -238,14 +237,16 @@ def admin():
             flash("Ei oikeuksia")
             return render_template("/")
     if request.method=="POST":
+        users.check_csrf()
         if request.form.get("id","") =="0":
             if not auctions.update_auctions():
                 flash("Päivittäminen epäonnistui")
                 return redirect("/admin")
             elif not auctions.update_winners():
-                flash("Päivittäminen epäonnistui3")
-            elif not auctions.update_final():
                 flash("Päivittäminen epäonnistui2")
+                return redirect("/admin")
+            elif not auctions.update_final():
+                flash("Päivittäminen epäonnistui3")
                 return redirect("/admin")
             else:
                 flash("Päivittäminen onnistui!")
@@ -264,6 +265,7 @@ def admin():
         if request.form.get("id","") =="2":
             username = request.form["username"]
             message = request.form["message"]
+            #TSEKKAA VIESTIN PITUUS
             if not users.send_message(username, message):
                 flash("Viestin lähettäminen epäonnistui")
                 return redirect("/admin")
