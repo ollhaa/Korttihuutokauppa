@@ -53,17 +53,17 @@ Admin-oikeudet ovat käyttäjällä *Admin*. Salasana on *adminword*.
 
 <h3> NÄKYMÄT </h3>
 
- * Rekisteröinti (Register)
- * Tietoa (About)
- * Kirjatuminen (Login)
+ * Rekisteröinti (register)
+ * Tietoa (about)
+ * Kirjatuminen (login)
  * Etusivu ()
- * Uusi huutokauppa (New)
- * Haku (Search)
- * Huutokauppa (Auction id_: riippuu huutokaupan tiedoista)
- * Profiili (Profile)
- * Viestit (Messages)
- * Anna palautetta (Feedback)
- * Ylläpitäjä (Admin: vaatii admin-oikeudet)
+ * Uusi huutokauppa (new)
+ * Haku (search)
+ * Huutokauppa (auction id_: riippuu huutokaupan tiedoista)
+ * Profiili (profile)
+ * Viestit (messages)
+ * Anna palautetta (feedback)
+ * Ylläpitäjä (admin: vaatii admin-oikeudet)
 
 <h3> TAULUT </h3>
 

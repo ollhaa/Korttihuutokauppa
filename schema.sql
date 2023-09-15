@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS feedbacks;
 DROP TABLE IF EXISTS bids;
 DROP TABLE IF EXISTS messages;
 
+CREATE SCHEMA public;
+
 CREATE TABLE users (
 	id SERIAL PRIMARY KEY, 
         username TEXT UNIQUE,

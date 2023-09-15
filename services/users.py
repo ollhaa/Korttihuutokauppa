@@ -8,6 +8,8 @@ def login(username, password):
     sql = "SELECT id, username, password FROM users WHERE username=:username"
     result = db.session.execute(text(sql), {"username":username})
     user = result.fetchone()
+    if user is None:
+        return False
     if user.username =="Admin":
         session["username"] = user.username
         session["user_id"] = user.id
