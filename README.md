@@ -1,8 +1,31 @@
 <h2> KORTTIHUUTOKAUPPA </h2>
 
+<h3> YLEISTÄ </h3>
+
 Korttihuutokauppa on nettihuutokauppasovellus, jossa on mahdollista tarjota huudettavaksi urheilukortteja, kuten jääkiekkokortteja. Tarjoaja asettaa kortin tyypin lisäksi, paikkakunnan, kunnon, aloitushinnan ja päättymispäivän. Lisäksi tarjoajan on asettava otsikko ja kuvaus kortista sekä laitettava kaksi kuvaa kortista. 
 
 Potentiaalinen ostaja voi hakea aktiivisia huutokauppoja paikkakunnan, kortin tyypin ja kunnon perusteella ja tehdä korotuksia sekä lähettää palautetta. Admin-oikeuksilla oleva käyttäjä voi antaa admin oikeuksia ja lähettää viestejä muille käyttäjille. 
+
+<h3> OHJEET </h3>
+
+Kloonaa repositorio koneellesi ja siirry sen juurikansioon. Tämän jälkeen luo .env-tiedosto ja lisää sinne seuraaava: 
+
+`DATABASE_URL=<tietokannan-paikallinen-osoite>`
+`SECRET_KEY=<salainen-avain>`
+
+Seuraavaksi sinun täytyy aktivoida virtuaaliympäristö ja asentaa välttämättömät riippuvuudet:
+
+`$ python3 -m venv venv`
+`$ source venv/bin/activate`
+`$ pip install -r ./requirements.txt`
+
+Tämän jälkeen määrittele tietokantataulut:
+
+`$ psql < schema.sql`
+
+Lopulta pääset käynnistämään ohjelman komennolla:
+
+`$ flask run`
 
 <h3> TOIMINNOT </h3>
 
@@ -54,3 +77,4 @@ Potentiaalinen ostaja voi hakea aktiivisia huutokauppoja paikkakunnan, kortin ty
 
 <h3> MUUTA </h3>
 
+Ohjelma toimii hyvin. En löytänyt manuaalisella testaamisella virheitä. Ajatus on automatisoida päättyneiden huutokauppojen päivittämiset, mutta en saanut tätä toimimaan. Ohjelmaa voisi laajentaa parannusehdotusten pohjalta melko helposti. 
