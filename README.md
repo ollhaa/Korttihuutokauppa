@@ -16,18 +16,21 @@ Potentiaalinen ostaja voi hakea aktiivisia huutokauppoja paikkakunnan, kortin ty
  * Sisäänkirjautunut käyttäjä voi lukea saamiaan viestejä
  * Admin-käyttäjä voi lähettää viestejä muille käyttäjille
  * Admin-käyttäjä voi antaa admin-oikeudet toiselle käyttäjälle
+ * Admin-käyttäjä voi päivittää huutokaupat (päättäminen, voittajan selvittäminen ja viestit) 
 
 <h3> NÄKYMÄT </h3>
 
  * Rekisteröinti (Register)
+ * Tietoa (About)
  * Kirjatuminen (Login)
+ * Etusivu ()
  * Uusi huutokauppa (New)
  * Haku (Search)
- * Huutokauppa (Auction id: riippuu huutokaupan tiedoista)
+ * Huutokauppa (Auction id_: riippuu huutokaupan tiedoista)
  * Profiili (Profile)
- * Viestit (Messages
- * Palaute (Feedback)
- * Admin (Admin: vaatii admin-oikeudet)
+ * Viestit (Messages)
+ * Anna palautetta (Feedback)
+ * Ylläpitäjä (Admin: vaatii admin-oikeudet)
 
 <h3> TAULUT </h3>
 
@@ -41,7 +44,7 @@ Potentiaalinen ostaja voi hakea aktiivisia huutokauppoja paikkakunnan, kortin ty
 <h3> PARANNUSEHDOTUKSET </h3>
 
  * Palautteiden lukeminen ei onnistu tällä hetkellä sovelluskesssa
- * Huutokauppojen muokkaaminen saattaisi olla hyvä toiminto myös käyttäjälle (kirjoitusvirheet yms.)
+ * Huutokauppojen muokkaaminen saattaisi olla hyvä toiminto käyttäjälle (kirjoitusvirheet yms.)
  * Automaattiset viestit kerran päivässä tms. voittajille ei onnistu tällä hetkellä
  * Autommaattiset huutokauppojen sulkemiset, kun aikaraja tulee täyteen ei onnistu tällä hetkellä
  * Testausta on tehty vain manuaalisesti

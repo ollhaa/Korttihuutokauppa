@@ -73,7 +73,7 @@ def send_feedback():
         users.check_csrf()
         feedback = request.form["feedback"]
         if len(feedback) > 120:
-            flash("Palautteen antaminen ei onnistunut")
+            flash("Palautteen maksimimerkkimäärä on 120")
         if not users.feedback(feedback):
             flash("Palautteen antaminen ei onnistunut")
         else:
@@ -146,10 +146,8 @@ def profile():
         new_password2 = request.form["new_password2"]
         if len(new_password) <4 or len(new_password) >10:
             flash("Salasanan vaihtoepäonnistui! Tarkista uuden salasanan pituus")
-            return redirect("/")
         if new_password != new_password2:
-            flash("Salasanan vaihtoepäonnistui! Salasanat eivät ole samat")
-            return redirect("/")
+            flash("Salasanan vaihto epäonnistui! Salasanat eivät ole samat")
 
         if users.update_password(password, new_password):
             flash("Salasana vaihdettu")
@@ -182,7 +180,7 @@ def results():
     return render_template("results.html", auctions=open_auctions,
     username= username, admin=admin_rights)
 
-@app.route("/auction/<int:id>", methods=["GET"])
+@app.route("/auction/<int:id_>", methods=["GET"])
 def auction(id_):
     admin_rights = users.is_admin()
     if request.method=="GET":
@@ -194,14 +192,14 @@ def auction(id_):
         return render_template("auction.html",id=id_,
         auction=auction_, max_bid=max_bid, username= username, admin=admin_rights)
 
-@app.route("/show_front/<int:id>")
+@app.route("/show_front/<int:id_>")
 def show_front(id_):
     data = auctions.show_front(id_)
     response = make_response(bytes(data))
     response.headers.set("Content-Type", "image/jpeg")
     return response
 
-@app.route("/show_back/<int:id>")
+@app.route("/show_back/<int:id_>")
 def show_back(id_):
     data = auctions.show_back(id_)
     response = make_response(bytes(data))

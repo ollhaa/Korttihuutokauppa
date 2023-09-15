@@ -18,10 +18,9 @@ def login(username, password):
     hash_value = user.password
     if not check_password_hash(hash_value, password):
         return False
-    else:
-        session["username"] = user.username
-        session["user_id"] = user.id
-        session["csrf_token"] = os.urandom(16).hex()
+    session["username"] = user.username
+    session["user_id"] = user.id
+    session["csrf_token"] = os.urandom(16).hex()
     return True
 
 def is_logged():
@@ -50,20 +49,20 @@ def add_admin_rights(to_username, password):
 
     if not check_password_hash(hash_value, password) and user.admin is False:
         return False
-    else:
-        try:
-            sql = "SELECT id, username, admin FROM users WHERE username=:to_username"
-            result = db.session.execute(text(sql), {"to_username":to_username})
-            user = result.fetchone()
-            if user.admin is  True:
-                return False
-            sql2 = """UPDATE users SET last_modified = NOW(),\
-            admin = True WHERE id =:to_user_id"""
-            db.session.execute(text(sql2), {"to_user_id":user.id})
-            db.session.commit()
-            return True
-        except:
+
+    try:
+        sql = "SELECT id, username, admin FROM users WHERE username=:to_username"
+        result = db.session.execute(text(sql), {"to_username":to_username})
+        user = result.fetchone()
+        if user.admin is  True:
             return False
+        sql2 = """UPDATE users SET last_modified = NOW(),\
+        admin = True WHERE id =:to_user_id"""
+        db.session.execute(text(sql2), {"to_user_id":user.id})
+        db.session.commit()
+        return True
+    except:
+        return False
 
 def send_message(username, message):
     if username == session.get("username"):
@@ -115,8 +114,8 @@ def register(username, password, mail):
 def get_profile_facts():
     user_id = session.get("user_id")
     sql = "SELECT username, created_at FROM users WHERE id=:user_id"
-    result1 = db.session.execute(text(sql), {"user_id":user_id})
-    facts = result1.fetchone()
+    result = db.session.execute(text(sql), {"user_id":user_id})
+    facts = result.fetchone()
     return facts
 
 def update_password(password, new_password):
