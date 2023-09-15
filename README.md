@@ -27,7 +27,9 @@ Lopulta pääset käynnistämään ohjelman komennolla:
 
 `$ flask run`
 
-Admin-oikeudet ovat käyttäjällä Admin. Salasana on adminword.
+HUOM!
+
+Admin-oikeudet ovat käyttäjällä *Admin*. Salasana on *adminword*.
 
 <h3> TOIMINNOT </h3>
 
@@ -74,7 +76,7 @@ Admin-oikeudet ovat käyttäjällä Admin. Salasana on adminword.
  * Autommaattiset huutokauppojen sulkemiset, kun aikaraja tulee täyteen ei onnistu tällä hetkellä
  * Testausta on tehty vain manuaalisesti
  * Graafinen ulkoasu voisi olla paljon parempi. 
- * Osa toiminnoista, kuten viestit ja niiden lukeminen, ovat hieman köpelösti tehtyjä.
+ * Osa toiminnoista, kuten viestit ja niiden lukeminen, ovat hieman kömpelösti tehtyjä.
 
 
 <h3> MUUTA </h3>
