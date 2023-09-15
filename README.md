@@ -13,6 +13,12 @@ Kloonaa repositorio koneellesi ja siirry sen juurikansioon. Tämän jälkeen luo
 `DATABASE_URL=<tietokannan-paikallinen-osoite>` \
 `SECRET_KEY=<salainen-avain>`
 
+Salaisen avaimen voit luoda esim. näin:
+
+`$ python3` \
+`>>> import secrets` \
+`>>> secrets.token_hex(16)`
+
 Seuraavaksi sinun täytyy aktivoida virtuaaliympäristö ja asentaa välttämättömät riippuvuudet:
 
 `$ python3 -m venv venv` \
