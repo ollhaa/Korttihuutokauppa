@@ -1,8 +1,9 @@
+from datetime import datetime, timedelta
+from flask import render_template, redirect, request, make_response, flash
 from app import app
 from services import users
 from services import auctions
-from flask import render_template, redirect, request, make_response, flash
-from datetime import datetime, timedelta
+
 
 @app.route("/")
 def index():
@@ -85,7 +86,7 @@ def new():
     if request.method == "GET":
         user = users.is_logged()
         username = user[0:3]+"..."
-        admin = users.is_admin()
+        admin_rights = users.is_admin()
         tomorrow = datetime.today() + timedelta(1)
         oneweek = datetime.today()+ timedelta(7)
         return render_template("new.html", tomorrow=tomorrow, oneweek=oneweek,
@@ -143,7 +144,12 @@ def profile():
         password = request.form["password"]
         new_password = request.form["new_password"]
         new_password2 = request.form["new_password2"]
-        #TSEKKAA PITUUDET
+        if len(new_password) <4 or len(new_password) >10:
+            flash("Salasanan vaihtoepäonnistui! Tarkista uuden salasanan pituus")
+            return redirect("/")
+        if new_password != new_password2:
+            flash("Salasanan vaihtoepäonnistui! Salasanat eivät ole samat")
+            return redirect("/")
 
         if users.update_password(password, new_password):
             flash("Salasana vaihdettu")
@@ -171,34 +177,33 @@ def results():
 
     if _class is None or city is None or condition is None:
         return redirect("/search")
-    else:
-        auctions.update_auctions()
-        open_auctions = auctions.result(_class, city, condition)
-        return render_template("results.html", auctions=open_auctions,
-        username= username, admin=admin_rights)
+    auctions.update_auctions()
+    open_auctions = auctions.results(_class, city, condition)
+    return render_template("results.html", auctions=open_auctions,
+    username= username, admin=admin_rights)
 
 @app.route("/auction/<int:id>", methods=["GET"])
-def auction(id):
+def auction(id_):
     admin_rights = users.is_admin()
     if request.method=="GET":
         user = users.is_logged()
         username = user[0:3]+"..."
         admin_rights = users.is_admin()
-        auction = auctions.get_auction(id)
-        max_bid = auctions.get_auction_max_bid(id)
-        return render_template("auction.html",id=id,
-        auction=auction, max_bid=max_bid, username= username, admin=admin_rights)
+        auction_ = auctions.get_auction(id_)
+        max_bid = auctions.get_auction_max_bid(id_)
+        return render_template("auction.html",id=id_,
+        auction=auction_, max_bid=max_bid, username= username, admin=admin_rights)
 
 @app.route("/show_front/<int:id>")
-def show_front(id):
-    data = auctions.show_front(id)
+def show_front(id_):
+    data = auctions.show_front(id_)
     response = make_response(bytes(data))
     response.headers.set("Content-Type", "image/jpeg")
     return response
 
 @app.route("/show_back/<int:id>")
-def show_back(id):
-    data = auctions.show_back(id)
+def show_back(id_):
+    data = auctions.show_back(id_)
     response = make_response(bytes(data))
     response.headers.set("Content-Type", "image/jpeg")
     return response
@@ -207,10 +212,10 @@ def show_back(id):
 def bid():
     users.check_csrf()
     auctions.update_auctions()
-    bid = request.form["bid"]
+    bid_ = request.form["bid"]
     auction_id =request.form["auction_id"]
     #TSEKKAA KOROTUS
-    if auctions.make_bid(auction_id, bid):
+    if auctions.make_bid(auction_id, bid_):
         flash("Korotus onnistui!")
     else:
         flash("Korotus epäonnistui tai yritit osallistua tekemääsi huutokauppaan!")
@@ -222,9 +227,9 @@ def messages():
         user = users.is_logged()
         username = user[0:3]+"..."
         admin_rights = users.is_admin()
-        messages = users.get_last_messages()
+        user_messages = users.get_last_messages()
         return render_template("/messages.html",
-        username= username, admin=admin_rights, messages= messages)
+        username= username, admin=admin_rights, messages= user_messages)
 
 @app.route("/admin", methods=["GET", "POST"])
 def admin():

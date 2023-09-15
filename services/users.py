@@ -11,7 +11,7 @@ def login(username, password):
     if user.username =="Admin":
         session["username"] = user.username
         session["user_id"] = user.id
-        
+
         return True
     if not user:
         return False
@@ -35,7 +35,7 @@ def is_admin():
         admin = result.fetchone()[1]
     except:
         return False
-    return admin 
+    return admin
 
 def check_csrf():
     if session["csrf_token"] != request.form["csrf_token"]:
@@ -48,25 +48,22 @@ def add_admin_rights(to_username, password):
     user = result.fetchone()
     hash_value = user.password
 
-    if not check_password_hash(hash_value, password) and user.admin ==False:
+    if not check_password_hash(hash_value, password) and user.admin is False:
         return False
-    else: 
-        try: 
+    else:
+        try:
             sql = "SELECT id, username, admin FROM users WHERE username=:to_username"
             result = db.session.execute(text(sql), {"to_username":to_username})
             user = result.fetchone()
-            if user.admin == True:
+            if user.admin is  True:
                 return False
-            else:
-                sql2 = """UPDATE users SET last_modified = NOW(), admin = True WHERE id =:to_user_id"""
-                db.session.execute(text(sql2), {"to_user_id":user.id})
-                db.session.commit()
-                return True
+            sql2 = """UPDATE users SET last_modified = NOW(),\
+            admin = True WHERE id =:to_user_id"""
+            db.session.execute(text(sql2), {"to_user_id":user.id})
+            db.session.commit()
+            return True
         except:
             return False
-            
-        
-    
 
 def send_message(username, message):
     if username == session.get("username"):
@@ -76,8 +73,10 @@ def send_message(username, message):
         sql = "SELECT id, username FROM users WHERE username=:username"
         result = db.session.execute(text(sql), {"username":username})
         user_id_to = result.fetchone()[0]
-        sql2 = """INSERT INTO messages (user_id_from, user_id_to, message, message_sent) VALUES (:user_id_from, :user_id_to, :message, NOW())"""
-        db.session.execute(text(sql2), {"user_id_from":user_id_from, "user_id_to":user_id_to, "message":message})
+        sql2 = """INSERT INTO messages (user_id_from, user_id_to, message, message_sent)\
+        VALUES (:user_id_from, :user_id_to, :message, NOW())"""
+        db.session.execute(text(sql2), {"user_id_from":user_id_from,\
+        "user_id_to":user_id_to, "message":message})
         db.session.commit()
     except:
         return False
@@ -85,7 +84,8 @@ def send_message(username, message):
 
 def get_last_messages():
     user_id_to = session.get("user_id")
-    sql = "SELECT message, message_sent FROM messages WHERE user_id_to=:user_id_to ORDER BY message_sent DESC LIMIT 10"
+    sql = "SELECT message, message_sent FROM messages WHERE user_id_to=:user_id_to\
+    ORDER BY message_sent DESC LIMIT 10"
     result = db.session.execute(text(sql), {"user_id_to":user_id_to})
     messages = result.fetchall()
     return messages
@@ -95,7 +95,7 @@ def logout():
     del session["user_id"]
 
 def register(username, password, mail):
-    
+
     sql = "SELECT username, password, mail FROM users WHERE username=:username"
     result = db.session.execute(text(sql), {"username":username})
     user = result.fetchone()
@@ -103,12 +103,13 @@ def register(username, password, mail):
         return False
     hash_value = generate_password_hash(password)
     try:
-        sql2 = """INSERT INTO users (username, password,mail, created_at, last_modified, admin) VALUES (:username, :password, :mail, NOW(), NOW(), False)"""
+        sql2 = """INSERT INTO users (username, password,mail, created_at, last_modified, admin)\
+        VALUES (:username, :password, :mail, NOW(), NOW(), False)"""
         db.session.execute(text(sql2), {"username":username, "password":hash_value, "mail":mail})
         db.session.commit()
     except:
         return False
-    
+
     return True
 
 def get_profile_facts():
@@ -136,12 +137,13 @@ def update_password(password, new_password):
     except:
         False
     return True
-    
-def feedback(feedback):
+
+def feedback(fb_):
     user_id = session.get("user_id")
-    try: 
-        sql = """INSERT INTO feedbacks (user_id, feedback, feedback_time) VALUES (:user_id, :feedback, NOW())"""
-        db.session.execute(text(sql), {"user_id": user_id, "feedback":feedback})
+    try:
+        sql = """INSERT INTO feedbacks (user_id, feedback, feedback_time)\
+        VALUES (:user_id, :feedback, NOW())"""
+        db.session.execute(text(sql), {"user_id": user_id, "feedback":fb_})
         db.session.commit()
     except:
         return False

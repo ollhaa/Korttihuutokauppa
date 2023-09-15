@@ -16,11 +16,11 @@ Olet luonnut profiilisi {{ facts.created_at.strftime("%Y-%m-%d %H:%M:%S") }}
 <h2> SALASANAN VAIHTAMINEN</h2>
     <form action="/profile" method="POST">
         <p>Anna nykyinen salasanasi:<br>
-        <input type="password" name="password"></p>
+        <input type="password" name="password" required></p>
         <p>Anna uusi salasanasi (4-10 merkkiä):<br>
-        <input type="password" name="new_password"></p>
+        <input type="password" name="new_password" minlength="4" maxlength="10"></p>
         <p>Uusi salasanasi uudestaan:<br>
-        <input type="password" name="new_password2"></p>
+        <input type="password" name="new_password2" minlength="4" maxlength="10"></p>
         <input type="submit" value="Lähetä">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
