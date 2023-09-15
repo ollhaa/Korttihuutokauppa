@@ -15,8 +15,8 @@ Kloonaa repositorio koneellesi ja siirry sen juurikansioon. Tämän jälkeen luo
 
 Seuraavaksi sinun täytyy aktivoida virtuaaliympäristö ja asentaa välttämättömät riippuvuudet:
 
-`$ python3 -m venv venv`
-`$ source venv/bin/activate`
+`$ python3 -m venv venv` /
+`$ source venv/bin/activate` /
 `$ pip install -r ./requirements.txt`
 
 Tämän jälkeen määrittele tietokantataulut:
@@ -26,6 +26,8 @@ Tämän jälkeen määrittele tietokantataulut:
 Lopulta pääset käynnistämään ohjelman komennolla:
 
 `$ flask run`
+
+Admin-oikeudet ovat käyttäjällä Admin. Salasana on adminword.
 
 <h3> TOIMINNOT </h3>
 
