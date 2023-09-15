@@ -10,13 +10,13 @@ Potentiaalinen ostaja voi hakea aktiivisia huutokauppoja paikkakunnan, kortin ty
 
 Kloonaa repositorio koneellesi ja siirry sen juurikansioon. Tämän jälkeen luo .env-tiedosto ja lisää sinne seuraaava: 
 
-`DATABASE_URL=<tietokannan-paikallinen-osoite>`
+`DATABASE_URL=<tietokannan-paikallinen-osoite>` \
 `SECRET_KEY=<salainen-avain>`
 
 Seuraavaksi sinun täytyy aktivoida virtuaaliympäristö ja asentaa välttämättömät riippuvuudet:
 
-`$ python3 -m venv venv` /
-`$ source venv/bin/activate` /
+`$ python3 -m venv venv` \
+`$ source venv/bin/activate` \
 `$ pip install -r ./requirements.txt`
 
 Tämän jälkeen määrittele tietokantataulut:
