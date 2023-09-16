@@ -136,7 +136,7 @@ def update_password(password, new_password):
         db.session.execute(text(sql), {"new_password":hash_value, "user_id":user_id})
         db.session.commit()
     except:
-        False
+        return False
     return True
 
 def feedback(fb_):

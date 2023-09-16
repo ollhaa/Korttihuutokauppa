@@ -59,6 +59,7 @@ Admin-oikeudet ovat käyttäjällä *Admin*. Salasana on *adminword*.
  * Etusivu ()
  * Uusi huutokauppa (new)
  * Haku (search)
+ * Haun tulokset (results)
  * Huutokauppa (auction id_: riippuu huutokaupan tiedoista)
  * Profiili (profile)
  * Viestit (messages)

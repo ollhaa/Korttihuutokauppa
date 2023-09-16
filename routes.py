@@ -186,7 +186,6 @@ def auction(id_):
     if request.method=="GET":
         user = users.is_logged()
         username = user[0:3]+"..."
-        #admin_rights = users.is_admin()
         auction_ = auctions.get_auction(id_)
         max_bid = auctions.get_auction_max_bid(id_)
         return render_template("auction.html",id=id_,
@@ -212,7 +211,8 @@ def bid():
     auctions.update_auctions()
     bid_ = request.form["bid"]
     auction_id =request.form["auction_id"]
-    #TSEKKAA KOROTUS
+    if bid_ <1 or bid_ > 10:
+        flash("Korotus epäonnistui!")
     if auctions.make_bid(auction_id, bid_):
         flash("Korotus onnistui!")
     else:
@@ -266,7 +266,6 @@ def admin():
         if request.form.get("id","") =="2":
             username = request.form["username"]
             message = request.form["message"]
-            #TSEKKAA VIESTIN PITUUS
             if not users.send_message(username, message):
                 flash("Viestin lähettäminen epäonnistui")
                 return redirect("/admin")
